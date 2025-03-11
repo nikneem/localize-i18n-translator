@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>ec362093-bf4d-4eb2-9850-a1237ad01232</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Aspire\Localizr.Aspire\Localizr.Aspire.ServiceDefaults\Localizr.Aspire.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\..\Localizr.Projects.Data.CosmosDb\Localizr.Projects.Data.CosmosDb.csproj" />
+    <ProjectReference Include="..\Localizr.Projects\Localizr.Projects.csproj" />
+  </ItemGroup>
+
+</Project>

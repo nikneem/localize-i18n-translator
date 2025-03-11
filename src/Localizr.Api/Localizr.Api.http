@@ -1,0 +1,6 @@
+@Localizr.Api_HostAddress = http://localhost:5149
+
+GET {{Localizr.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

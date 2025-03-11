@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Identity" Version="1.13.2" />
+    <PackageReference Include="HexMaster.DomainDrivenDesign" Version="3.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Localizr.Core.Abstractions\Localizr.Core.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Localizr.Core\Localizr.Core.csproj" />
+    <ProjectReference Include="..\Localizr.Projects.Abstractions\Localizr.Projects.Abstractions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\ProjectList\" />
+  </ItemGroup>
+
+</Project>
