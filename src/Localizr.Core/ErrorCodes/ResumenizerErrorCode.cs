@@ -1,6 +1,6 @@
 ﻿namespace Localizr.Core.ErrorCodes;
 
-public abstract class SpreaViewErrorCode
+public abstract class LocalizrErrorCode
 {
     public abstract int Code { get; }
     public abstract string Key { get; }

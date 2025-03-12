@@ -1,9 +1,9 @@
 ﻿namespace Localizr.Core.ErrorCodes;
 
-public sealed class ResumenizerCoreErrorCode(int code, string key) : SpreaViewErrorCode
+public sealed class LocalizrCoreErrorCode(int code, string key) : LocalizrErrorCode
 {
 
-    public static ResumenizerCoreErrorCode LanguageNotFound => new(1000, nameof(LanguageNotFound));
+    public static LocalizrCoreErrorCode LanguageNotFound => new(1000, nameof(LanguageNotFound));
 
 
     public override int Code { get; } = code;

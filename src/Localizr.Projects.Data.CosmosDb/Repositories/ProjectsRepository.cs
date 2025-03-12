@@ -2,6 +2,8 @@
 using HexMaster.DomainDrivenDesign.ChangeTracking;
 using Localizr.Core.Configuration;
 using Localizr.Projects.Abstractions.DomainModels;
+using Localizr.Projects.Abstractions.ErrorCodes;
+using Localizr.Projects.Abstractions.Exceptions;
 using Localizr.Projects.Abstractions.Repositories;
 using Localizr.Projects.Data.CosmosDb.Entities;
 using Localizr.Projects.Data.CosmosDb.Mappings;
@@ -11,9 +13,10 @@ using Microsoft.Extensions.Options;
 
 namespace Localizr.Projects.Data.CosmosDb.Repositories;
 
-public class ProjectsRepository(CosmosClient client, IOptions<CosmosDbConfiguration> cosmosConfiguration) : IProjectsRepository
+public class ProjectsRepository(CosmosClient client, IOptions<CosmosDbConfiguration> cosmosConfiguration)
+    : IProjectsRepository
 {
-    public async  Task<bool> Save(IProject project, CancellationToken cancellationToken)
+    public async Task<bool> Save(IProject project, CancellationToken cancellationToken)
     {
         if (project.TrackingState == TrackingState.New)
         {
@@ -26,6 +29,7 @@ public class ProjectsRepository(CosmosClient client, IOptions<CosmosDbConfigurat
         return false;
 
     }
+
     public async Task<List<IProject>> List(string? name, CancellationToken cancellationToken)
     {
         var container = GetContainer();
@@ -36,6 +40,7 @@ public class ProjectsRepository(CosmosClient client, IOptions<CosmosDbConfigurat
         {
             query = query.Where(p => p.Name.Contains(name));
         }
+
         var iterator = query.ToFeedIterator();
 
         var list = new List<IProject>();
@@ -46,6 +51,24 @@ public class ProjectsRepository(CosmosClient client, IOptions<CosmosDbConfigurat
         }
 
         return list;
+    }
+
+    public async Task<IProject> Get(Guid projectId, CancellationToken cancellationToken)
+    {
+        var container = GetContainer();
+        var entity = await container.ReadItemAsync<ProjectEntity>(
+            projectId.ToString(),
+            new PartitionKey(projectId.ToString()),
+            cancellationToken: cancellationToken);
+        if (entity.StatusCode == HttpStatusCode.OK)
+        {
+            return entity.Resource.ToDomainModel();
+        }
+
+        throw new LocalizrProjectException(LocalizerProjectErrorCode.ProjectNotFound,
+            $"A project with ID {projectId} could not be found");
+
+
     }
 
     private Container GetContainer()

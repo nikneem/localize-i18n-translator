@@ -1,6 +1,7 @@
 ﻿using Localizr.Core.Abstractions.Cqrs;
 using Localizr.Core.Abstractions.DataTransferObjects;
 using Localizr.Projects.Features.ProjectCreate;
+using Localizr.Projects.Features.ProjectGet;
 using Localizr.Projects.Features.ProjectList;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -13,6 +14,7 @@ public static class AppHostBuilderExtensions
     {
         // Adding queries
         builder.Services.AddScoped<IQueryHandler<ProjectListQuery, LocalizrListResponse<ProjectListItem>>, ProjectListHandler>();
+        builder.Services.AddScoped<IQueryHandler<ProjectGetQuery, LocalizrResponse<ProjectDetailsResponse>>, ProjectGetHandler>();
 
         // Adding commands
         builder.Services.AddScoped<ICommandHandler<ProjectCreateCommand, LocalizrResponse<ProjectCreateDetailsResponse>>, ProjectCreateHandler>();

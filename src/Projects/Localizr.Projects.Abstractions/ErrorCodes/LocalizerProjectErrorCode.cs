@@ -2,7 +2,7 @@
 
 namespace Localizr.Projects.Abstractions.ErrorCodes;
 
-public sealed class LocalizerProjectErrorCode(int code, string key) : SpreaViewErrorCode
+public sealed class LocalizerProjectErrorCode(int code, string key) : LocalizrErrorCode
 {
 
     public static LocalizerProjectErrorCode ProjectErrorCode => new(1000, nameof(ProjectErrorCode));
