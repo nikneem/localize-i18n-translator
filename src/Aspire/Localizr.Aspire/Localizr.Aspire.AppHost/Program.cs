@@ -28,4 +28,13 @@ builder.AddProject<Projects.Localizr_Projects_Api>("localizr-projects-api")
     .WithEnvironment("CosmosDb:ProjectsContainer", "projects");
 
 
+builder.AddProject<Projects.Localizr_Translations_Api>("localizr-translations-api");
+
+
+builder.AddProject<Projects.Localizr_Organizations_Api>("localizr-organizations-api");
+
+
+builder.AddProject<Projects.Localizr_Members_Api>("localizr-members-api");
+
+
 builder.Build().Run();

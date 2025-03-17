@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HexMaster.DomainDrivenDesign" Version="3.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Localizr.Core\Localizr.Core.csproj" />
+    <ProjectReference Include="..\Localize.Organizations.Abstractions\Localize.Organizations.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

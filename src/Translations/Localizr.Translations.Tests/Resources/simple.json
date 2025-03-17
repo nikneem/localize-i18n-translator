@@ -1,0 +1,17 @@
+﻿{
+    "button": {
+        "register": "Register",
+        "login": "Login",
+        "logout": "Logout"
+    },
+    "auth": {
+        "unauthorized": {
+            "title": "Oops",
+            "message": "You seem to have landed on a page that you are not authorized to view. You may need to login, or register in case you don't have an account."
+        },
+        "authresult": {
+            "title": "Hold on",
+            "message": "We're aligning the sun and the moon to make sure you are who you say you are."
+        }
+    }
+}

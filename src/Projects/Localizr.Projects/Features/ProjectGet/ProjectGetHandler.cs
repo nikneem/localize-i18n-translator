@@ -10,6 +10,7 @@ public class ProjectGetHandler(IProjectsRepository projectsRepository, ILogger<P
 {
     public async ValueTask<LocalizrResponse<ProjectDetailsResponse>> HandleAsync(ProjectGetQuery query, CancellationToken cancellationToken)
     {
+        logger.LogInformation("Getting single project details with project ID {projectId} from the projects repository", query.ProjectId);
         var result = await projectsRepository.Get(query.ProjectId, cancellationToken);
         var response = new ProjectDetailsResponse(
             result.Id, 
