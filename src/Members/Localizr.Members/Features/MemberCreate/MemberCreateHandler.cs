@@ -8,10 +8,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Localizr.Members.Features.MemberCreate;
 
-public class MemberCreateHandler(IMembersRepository membersRepository, ILogger<MemberCreateHandler> logger) : ICommandHandler<MemberCreateCommand, LocalizrResponse<MemberDetailsResponse>>
+public class MemberCreateHandler(
+    IMembersRepository membersRepository, 
+    ILogger<MemberCreateHandler> logger) : ICommandHandler<MemberCreateCommand, LocalizrResponse<MemberDetailsResponse>>
 {
-
-
     public async ValueTask<LocalizrResponse<MemberDetailsResponse>> HandleAsync(MemberCreateCommand command, CancellationToken cancellationToken)
     {
         logger.LogInformation("Handling incoming message for member registration with command {commandId}", command.CommandId);

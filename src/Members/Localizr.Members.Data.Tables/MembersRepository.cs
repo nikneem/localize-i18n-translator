@@ -1,5 +1,6 @@
 ﻿using Azure;
 using Azure.Data.Tables;
+using HexMaster.DomainDrivenDesign.ChangeTracking;
 using Localizr.Members.Abstractions.Configuration;
 using Localizr.Members.Abstractions.DomainModels;
 using Localizr.Members.Abstractions.Repositories;
@@ -20,8 +21,6 @@ public class MembersRepository(
 
     public async Task<IMember?> Get(string subjectId, CancellationToken cancellationToken)
     {
-        
-        
         var tableClient = client.GetTableClient(config.Value.MembersTableName);
         try
         {
@@ -44,8 +43,28 @@ public class MembersRepository(
         return null;
     }
 
-    public Task<bool> Save(IMember member, CancellationToken cancellationToken)
+    public async Task<bool> Save(IMember member, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        if (member.TrackingState == TrackingState.New ||
+            member.TrackingState == TrackingState.Modified)
+        {
+            var membersEntity = new MemberTableEntity
+            {
+                PartitionKey = PartitionKey,
+                RowKey = member.SubjectId,
+                Id = member.Id,
+                DisplayName = member.DisplayName,
+                EmailAddress = member.EmailAddress,
+                ProfilePicture = member.ProfilePicture,
+                CreatedOn = DateTimeOffset.UtcNow,
+            };
+
+            var tableClient = client.GetTableClient(config.Value.MembersTableName);
+            await tableClient.CreateIfNotExistsAsync(cancellationToken);
+            var result = await tableClient.UpsertEntityAsync(membersEntity, TableUpdateMode.Replace, cancellationToken: cancellationToken);
+            return !result.IsError;
+        }
+        // Nothing to be done
+        return true;
     }
 }
