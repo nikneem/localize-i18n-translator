@@ -19,6 +19,7 @@ builder.Services.AddAuthentication(options =>
     options.Authority = "https://localizr.eu.auth0.com/";
     options.Audience = "https://localizr-api.hexmaster.nl";
 });
+builder.Services.AddAuthorization();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
