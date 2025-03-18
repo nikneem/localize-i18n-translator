@@ -39,7 +39,7 @@ public static class Extensions
         //     options.AllowedSchemes = ["https"];
         // });
 
-        builder.AddLocalizrCoreServices();
+        
 
         return builder;
     }

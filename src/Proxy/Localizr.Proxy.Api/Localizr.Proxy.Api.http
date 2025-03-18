@@ -1,0 +1,6 @@
+@Localizr.Proxy.Api_HostAddress = http://localhost:5115
+
+GET {{Localizr.Proxy.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

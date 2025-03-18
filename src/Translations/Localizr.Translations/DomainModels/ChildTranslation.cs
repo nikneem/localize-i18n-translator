@@ -3,14 +3,11 @@ using HexMaster.DomainDrivenDesign.ChangeTracking;
 
 namespace Localizr.Translations.DomainModels;
 
-public class Translations : DomainModel<Guid>
+public class ChildTranslation : DomainModel<Guid>
 {
 
-    private List<ChildTranslation> _childTranslations;
+    private readonly List<ChildTranslation> _childTranslations;
 
-    public Guid ProjectId { get; }
-    public string LanguageId { get; }
-    public bool IsDefault { get; }
     public string Key { get; private set; }
     public string FullNodeKey { get; private set; }
     public string? Value { get; private set; }
@@ -88,20 +85,16 @@ public class Translations : DomainModel<Guid>
         LastModifiedOn = DateTimeOffset.UtcNow;
     }
 
-    public Translations(Guid id,
-        Guid projectId,
-        string languageId,
-        bool isDefault,
-        string key, 
-        string fullNodeKey, 
+    public ChildTranslation(Guid id,
+        string key,
+        string fullNodeKey,
         string? value,
         List<ChildTranslation> childTranslations,
-        bool isChecked, 
-        DateTimeOffset createdOn, 
+        bool isChecked,
+        DateTimeOffset createdOn,
         DateTimeOffset? lastModifiedOn) : base(id)
     {
         _childTranslations = childTranslations;
-        ProjectId = projectId;
         Key = key;
         FullNodeKey = fullNodeKey;
         Value = value;
@@ -110,11 +103,8 @@ public class Translations : DomainModel<Guid>
         LastModifiedOn = lastModifiedOn;
     }
 
-    private Translations(Guid projectId, string languageId, bool isDefault, string key) : base(Guid.NewGuid(), TrackingState.New)
+    private ChildTranslation(string key) : base(Guid.NewGuid(), TrackingState.New)
     {
-        ProjectId = projectId;
-        LanguageId = languageId;
-        IsDefault = isDefault;
         Key = key;
         FullNodeKey = key;
         IsChecked = false;
@@ -122,10 +112,8 @@ public class Translations : DomainModel<Guid>
         _childTranslations = [];
     }
 
-    internal static Translations Create(Guid projectId, string languageId, bool isDefault, string key)
+    internal static ChildTranslation Create(string key)
     {
-        return new Translations(projectId, languageId, isDefault, key);
+        return new ChildTranslation(key);
     }
-
-
 }

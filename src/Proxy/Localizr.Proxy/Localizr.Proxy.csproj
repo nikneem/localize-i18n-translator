@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Entities\" />
+    <PackageReference Include="Yarp.ReverseProxy" Version="2.3.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Localizr.Core\Localizr.Core.csproj" />
+    <ProjectReference Include="..\..\Localizr.Core\Localizr.Core.csproj" />
   </ItemGroup>
 
 </Project>

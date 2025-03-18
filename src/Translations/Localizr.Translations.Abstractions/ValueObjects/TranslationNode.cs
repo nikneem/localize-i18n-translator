@@ -1,7 +1,10 @@
 ﻿namespace Localizr.Translations.Abstractions.ValueObjects;
 
-public class TranslationNode
-{
-    public string? Value { get; set; }
-    public Dictionary<string, TranslationNode>? Children { get; set; } = new();
-}
+public record TranslationNode(
+    string Key, 
+    string FullNodeKey, 
+    string? Value,
+    List<TranslationNode>? Children,
+    bool IsChecked,
+    DateTimeOffset CreatedOn,
+    DateTimeOffset? LastModifiedOn);

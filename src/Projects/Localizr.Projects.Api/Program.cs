@@ -1,3 +1,4 @@
+using Localizr.Core.ExtensionMethods;
 using Localizr.Projects.Api.Endpoints;
 using Localizr.Projects.Data.CosmosDb.ExtensionMethods;
 using Localizr.Projects.ExtensionMethods;
@@ -5,6 +6,7 @@ using Localizr.Projects.ExtensionMethods;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults()
+    .AddLocalizrCoreServices(true)
     .AddLocalizrProjects()
     .WithCosmosProjectsRepository();
 
@@ -23,7 +25,6 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
 
 app.Run();
 

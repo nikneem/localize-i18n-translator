@@ -20,6 +20,7 @@
     <ProjectReference Include="..\..\..\Members\Localizr.Members.Api\Localizr.Members.Api.csproj" />
     <ProjectReference Include="..\..\..\Organizations\Localizr.Organizations.Api\Localizr.Organizations.Api.csproj" />
     <ProjectReference Include="..\..\..\Projects\Localizr.Projects.Api\Localizr.Projects.Api.csproj" />
+    <ProjectReference Include="..\..\..\Proxy\Localizr.Proxy.Api\Localizr.Proxy.Api.csproj" />
     <ProjectReference Include="..\..\..\Translations\Localizr.Translations.Api\Localizr.Translations.Api.csproj" />
   </ItemGroup>
 

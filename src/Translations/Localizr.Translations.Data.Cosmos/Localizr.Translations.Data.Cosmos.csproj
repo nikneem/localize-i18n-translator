@@ -7,15 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
+    <Folder Include="Entities\" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="HexMaster.DomainDrivenDesign" Version="3.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Localizr.Translations.Abstractions\Localizr.Translations.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Localizr.Core\Localizr.Core.csproj" />
   </ItemGroup>
 
 </Project>
