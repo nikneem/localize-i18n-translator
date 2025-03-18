@@ -2,6 +2,8 @@ using Microsoft.Extensions.Hosting;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
+var storageAccount = builder.AddAzureStorage("storage");
+var membersTable = storageAccount.AddTables("members");
 
 var cosmos = builder.AddAzureCosmosDB("cosmos")
     .WithHttpEndpoint(51234, 1234, "explorer-port")
@@ -16,10 +18,22 @@ if (builder.Environment.IsDevelopment())
     });
 #pragma warning restore ASPIRECOSMOSDB001
 
+    storageAccount.RunAsEmulator(opts =>
+    {
+        opts.WithLifetime(ContainerLifetime.Persistent);
+    });
+
 }
 
 var database = cosmos.AddCosmosDatabase("localizr");
 var container = database.AddContainer("projects", "/projectId");
+
+var membersApi = builder.AddProject<Projects.Localizr_Members_Api>("localizr-members-api")
+    .WaitFor(membersTable)
+    .WithReference(membersTable)
+    .WithEnvironment("LocalizrMembers:StorageAccountName", storageAccount.Resource.Name)
+    .WithEnvironment("LocalizrMembers:MembersTableName", "members");
+
 
 var projectsApi = builder.AddProject<Projects.Localizr_Projects_Api>("localizr-projects-api")
     .WaitFor(cosmos)
@@ -39,7 +53,6 @@ var organizationsApi = builder.AddProject<Projects.Localizr_Organizations_Api>("
     .WithEnvironment("CosmosDb:DatabaseName", "localizr")
     .WithEnvironment("CosmosDb:ProjectsContainer", "projects");
 
-var membersApi = builder.AddProject<Projects.Localizr_Members_Api>("localizr-members-api");
 
 var proxyApi = builder.AddProject<Projects.Localizr_Proxy_Api>("localizr-proxy-api")
     .WaitFor(projectsApi)

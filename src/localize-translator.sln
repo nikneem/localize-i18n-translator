@@ -61,6 +61,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Localizr.Proxy", "Proxy\Loc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Localizr.Proxy.Api", "Proxy\Localizr.Proxy.Api\Localizr.Proxy.Api.csproj", "{FEB9727F-9174-4B42-9B29-854B659A1D7A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Localizr.Members.Data.Tables", "Members\Localizr.Members.Data.Tables\Localizr.Members.Data.Tables.csproj", "{D8300697-0AC6-4E0D-8F60-EE8B97126DAD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -159,6 +161,10 @@ Global
 		{FEB9727F-9174-4B42-9B29-854B659A1D7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEB9727F-9174-4B42-9B29-854B659A1D7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FEB9727F-9174-4B42-9B29-854B659A1D7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8300697-0AC6-4E0D-8F60-EE8B97126DAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8300697-0AC6-4E0D-8F60-EE8B97126DAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8300697-0AC6-4E0D-8F60-EE8B97126DAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8300697-0AC6-4E0D-8F60-EE8B97126DAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -185,6 +191,7 @@ Global
 		{8779EC23-80E8-4DB3-A852-CDD9D1891595} = {856E4778-6969-4674-9392-6286ABC7EF5E}
 		{DE6F3115-D61E-4692-8688-A3546CC23C6A} = {6E01B144-B51D-41FD-A901-F652317C2275}
 		{FEB9727F-9174-4B42-9B29-854B659A1D7A} = {6E01B144-B51D-41FD-A901-F652317C2275}
+		{D8300697-0AC6-4E0D-8F60-EE8B97126DAD} = {1F38B8B9-823E-484E-BBD1-741822757133}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3FA8742D-AF0F-4B42-AE76-C98DF348E68B}

@@ -1,6 +1,7 @@
 ﻿using Localizr.Core.Abstractions.Cqrs;
 using Localizr.Core.Abstractions.DataTransferObjects;
 using Localizr.Members.Abstractions.DataTransferObjects;
+using Localizr.Members.Features.MemberGet;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,20 +13,33 @@ public static class MemberEndpoints
     {
         var group = app.MapGroup("/members").WithTags("Members");
 
+        group.MapGet("/", MemberGet)
+            .WithName(nameof(MemberGet))
+            .Produces(StatusCodes.Status201Created)
+            .Produces(StatusCodes.Status404NotFound);
+
         group.MapPost("/", MemberCreate)
             .WithName(nameof(MemberCreate))
             .Produces(StatusCodes.Status201Created)
             .ProducesValidationProblem();
     }
 
+    private static async Task<Results<Ok<LocalizrResponse<MemberDetailsResponse>>, ValidationProblem>> MemberGet(
+        [FromServices] IQueryHandler<MemberGetQuery, LocalizrResponse<MemberDetailsResponse>> handler,
+        [FromServices] IHttpContextAccessor httpContextAccessor)
+    {
+        var spul = httpContextAccessor.HttpContext.User;
+        var query = new MemberGetQuery("123");
+        var response = await handler.HandleAsync(query, CancellationToken.None);
+        return TypedResults.Ok(response);
+    }
+
+
     private static async Task<Results<Created, ValidationProblem>> MemberCreate(
         [FromBody] MemberCreateCommand command, 
         [FromServices] ICommandHandler<MemberCreateCommand, LocalizrResponse<MemberDetailsResponse>> handler)
     {
         var response = await handler.HandleAsync(command, CancellationToken.None);
-
         return TypedResults.Created($"/members/{response.Data.Id}");
-
-        
     }
 }

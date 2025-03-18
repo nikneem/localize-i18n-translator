@@ -34,7 +34,7 @@ public class SpreaViewProxyConfiguration : IProxyConfigProvider
                     {
                         "default", new DestinationConfig
                         {
-                            Address = $"http://{ServiceName.MembersService}/api",
+                            Address = $"http://{ServiceName.MembersService}",
                             Health = $"http://{ServiceName.MembersService}/health",
                             Host = ServiceName.MembersService
                         }
