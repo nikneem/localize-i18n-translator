@@ -2,4 +2,4 @@
 
 namespace Localizr.Members.Abstractions.DataTransferObjects;
 
-public record MemberCreateCommand(string? SubjectId, string DisplayName, string EmailAddress, string? ProfilePicture) : CommandBase;
+public record MemberCreateCommand(string? SubjectId, string DisplayName, string EmailAddress, bool? EmailAddressVerified,string? ProfilePicture) : CommandBase;

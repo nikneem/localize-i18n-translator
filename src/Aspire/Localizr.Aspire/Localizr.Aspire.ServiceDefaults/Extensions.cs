@@ -1,3 +1,4 @@
+using Localizr.Core.ExtensionMethods;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,6 +29,7 @@ public static class Extensions
             http.AddServiceDiscovery();
         });
 
+        builder.AddLocalizrCoreServices();
 
         return builder;
     }

@@ -32,7 +32,7 @@ public class MembersRepository(
             {
 
                 var entity = tableQueryResult.Value;
-                return new Member(Guid.NewGuid(), subjectId, "Henk", "henk@email.com", null);
+                return new Member(Guid.NewGuid(), subjectId, entity.DisplayName, entity.EmailAddress, entity.EmailAddressVerified, entity.ProfilePicture);
             }
         }
         catch (RequestFailedException ex)
@@ -55,6 +55,7 @@ public class MembersRepository(
                 Id = member.Id,
                 DisplayName = member.DisplayName,
                 EmailAddress = member.EmailAddress,
+                EmailAddressVerified = member.EmailAddressVerified,
                 ProfilePicture = member.ProfilePicture,
                 CreatedOn = DateTimeOffset.UtcNow,
             };

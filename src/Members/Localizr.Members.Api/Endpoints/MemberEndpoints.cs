@@ -37,13 +37,14 @@ public static class MemberEndpoints
     }
 
 
-    private static async Task<Results<Created, ValidationProblem>> MemberCreate(
+    private static async Task<Results<Ok<LocalizrResponse<MemberDetailsResponse>>, ValidationProblem>> MemberCreate(
         [FromBody] MemberCreateCommand command, 
         [FromServices] ICommandHandler<MemberCreateCommand, LocalizrResponse<MemberDetailsResponse>> handler,
         [FromServices] IOidcTokensService oidcTokensService)
     {
-        var spul = oidcTokensService.GetSubjectId();
+        var userSubjectId = oidcTokensService.GetSubjectId();
+        command = command with { SubjectId= userSubjectId };
         var response = await handler.HandleAsync(command, CancellationToken.None);
-        return TypedResults.Created($"/members/{response.Data.Id}");
+        return TypedResults.Ok(response);
     }
 }
