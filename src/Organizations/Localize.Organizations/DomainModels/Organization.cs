@@ -7,8 +7,8 @@ namespace Localize.Organizations.DomainModels;
 public class Organization : DomainModel<Guid>
 {
 
-    private List<OrganizationMember> _organizationMembers;
-    private List<OrganizationInvitation> _invitations;
+    private readonly List<OrganizationMember> _organizationMembers;
+    private readonly List<OrganizationInvitation> _invitations;
 
 
     public string DisplayName { get; private set; }

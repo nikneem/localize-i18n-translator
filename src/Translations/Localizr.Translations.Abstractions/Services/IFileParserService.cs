@@ -4,7 +4,12 @@ namespace Localizr.Translations.Abstractions.Services;
 
 public interface IFileParserService
 {
-    Task<List<TranslationRootNode>> ImportFromFile(Stream stream, CancellationToken cancellationToken);
-    Task<List<TranslationRootNode>> ImportFromFile(string filename, CancellationToken cancellationToken);
-    Task<bool> ExportToFile(string filename, List<TranslationRootNode> translations, CancellationToken cancellationToken);
+    Task<List<TranslationRootNode>> ImportFromFile(Stream stream, string defaultLanguageId, CancellationToken cancellationToken);
+    Task<List<TranslationRootNode>> ImportFromFile(string filename, string defaultLanguageId, CancellationToken cancellationToken);
+    Task<bool> ExportToFile(
+        string filename,
+        List<TranslationRootNode> translations,
+        string language,
+        string defaultLanguage,
+        CancellationToken cancellationToken);
 }

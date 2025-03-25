@@ -6,16 +6,16 @@ namespace Localizr.Translations.Services;
 
 public class TranslationsJsonFileParserService : IFileParserService
 {
-    public async Task<List<TranslationRootNode>> ImportFromFile(Stream stream, CancellationToken cancellationToken)
+    public async Task<List<TranslationRootNode>> ImportFromFile(Stream stream, string defaultLanguageId, CancellationToken cancellationToken)
     {
         var reader = new StreamReader(stream);
         string jsonContent = await reader.ReadToEndAsync(cancellationToken);
-        var translations = ParseJson(jsonContent);
+        var translations = ParseJson(jsonContent, defaultLanguageId);
 
         return translations;
     }
 
-    public async Task<List<TranslationRootNode>> ImportFromFile(string filename, CancellationToken cancellationToken)
+    public async Task<List<TranslationRootNode>> ImportFromFile(string filename, string defaultLanguageId, CancellationToken cancellationToken)
     {
         if (!File.Exists(filename))
         {
@@ -23,11 +23,11 @@ public class TranslationsJsonFileParserService : IFileParserService
         }
 
         string jsonContent = await File.ReadAllTextAsync(filename, cancellationToken);
-        var translations = ParseJson(jsonContent);
+        var translations = ParseJson(jsonContent, defaultLanguageId);
         return translations;
     }
 
-    private List<TranslationRootNode> ParseJson(string jsonContent)
+    private List<TranslationRootNode> ParseJson(string jsonContent, string defaultLanguageId)
     {
         var translations = new List<TranslationRootNode>();
         var translationsAlternative = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonContent,
@@ -37,15 +37,13 @@ public class TranslationsJsonFileParserService : IFileParserService
 
         foreach (var translationRootNode in translationsAlternative)
         {
-            var translationNode = ParseNode(translationRootNode.Key, parentKey, translationRootNode.Value);
+            var translationNode = ParseNode(translationRootNode.Key, parentKey, defaultLanguageId, translationRootNode.Value);
             translations.Add(
                 new TranslationRootNode(
-                    "en", 
-                    true, 
                     translationNode.Key,
                     translationNode.FullNodeKey,
-                    translationNode.Value,
                     translationNode.Children,
+                    translationNode.Values,
                     translationNode.IsChecked,
                     translationNode.CreatedOn,
                     translationNode.LastModifiedOn));
@@ -55,7 +53,7 @@ public class TranslationsJsonFileParserService : IFileParserService
 
     }
 
-    private List<TranslationNode> GetChildNodes(string parentKey, JsonElement childNodes)
+    private List<TranslationNode> GetChildNodes(string parentKey, string languageId, JsonElement childNodes)
     {
         var deserializedChildNodes = JsonSerializer.Deserialize<Dictionary<string, object>>(
             childNodes.ToString(),
@@ -64,37 +62,43 @@ public class TranslationsJsonFileParserService : IFileParserService
         var nodes = new List<TranslationNode>();
         foreach (var kvp in deserializedChildNodes)
         {
-            var translationNode = ParseNode(kvp.Key, parentKey, kvp.Value);
+            var translationNode = ParseNode(kvp.Key, parentKey, languageId, kvp.Value);
             nodes.Add(translationNode);
         }
 
         return nodes;
     }
 
-    private TranslationNode ParseNode(string key, string? parentKey, object childNode)
+    private TranslationNode ParseNode(string key, string? parentKey, string languageId, object childNode)
     {
         parentKey = string.IsNullOrWhiteSpace(parentKey) ? key : $"{parentKey}.{key}";
-        string? value = null;
+        var values = new List<TranslationValue>();
         List<TranslationNode>? children = null;
         if (childNode is JsonElement jsonElement)
         {
             if (jsonElement.ValueKind == JsonValueKind.String)
             {
-                value = jsonElement.GetString();
+                var value = jsonElement.GetString();
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    values.Add(new TranslationValue(languageId, value));
+                }
             }
 
             if (jsonElement.ValueKind == JsonValueKind.Object)
             {
-                children = GetChildNodes(parentKey, jsonElement);
+                children = GetChildNodes(parentKey, languageId, jsonElement);
             }
         }
 
-        return new TranslationNode(key, parentKey, value, children, false, DateTimeOffset.UtcNow, null);
+        return new TranslationNode(key, parentKey, children, values, false, DateTimeOffset.UtcNow, null);
     }
 
     public async Task<bool> ExportToFile(
         string filename,
-        List<TranslationRootNode> translations,
+        List<TranslationRootNode> translations, 
+        string language, 
+        string defaultLanguage,
         CancellationToken cancellationToken)
     {
 
@@ -110,7 +114,7 @@ public class TranslationsJsonFileParserService : IFileParserService
         writer.WriteStartObject();
         foreach (var node in translations)
         {
-            WriteNode(writer, node);
+            WriteNode(writer, node, language, defaultLanguage);
         }
         writer.WriteEndObject();
         await writer.FlushAsync(cancellationToken);
@@ -118,18 +122,21 @@ public class TranslationsJsonFileParserService : IFileParserService
         return true;
     }
 
-    private void WriteNode(Utf8JsonWriter writer, TranslationNode node)
+    private void WriteNode(Utf8JsonWriter writer, TranslationNode node, string language, string defaultLanguage)
     {
-        if (node.Value != null)
+        var value = node.Values.FirstOrDefault(v => v.LanguageId == language) ??
+                    node.Values.FirstOrDefault(v => v.LanguageId == defaultLanguage);
+
+        if (value != null)
         {
-            writer.WriteString(node.Key, node.Value);
+            writer.WriteString(node.Key, value.Value);
         }
         else if (node.Children != null)
         {
             writer.WriteStartObject(node.Key);
             foreach (var child in node.Children)
             {
-                WriteNode(writer, child);
+                WriteNode(writer, child,language, defaultLanguage);
             }
             writer.WriteEndObject();
         }

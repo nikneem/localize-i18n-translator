@@ -6,14 +6,14 @@ namespace Localizr.Translations.DomainModels;
 public class Translations : DomainModel<Guid>
 {
 
-    private List<ChildTranslation> _childTranslations;
+    private readonly List<ChildTranslation> _childTranslations;
+    private readonly List<TranslationValue> _translationValues;
 
     public Guid ProjectId { get; }
-    public string LanguageId { get; }
     public bool IsDefault { get; }
     public string Key { get; private set; }
     public string FullNodeKey { get; private set; }
-    public string? Value { get; private set; }
+    public IReadOnlyList<TranslationValue> Values => _translationValues.AsReadOnly();
     public IReadOnlyList<ChildTranslation> Children => _childTranslations.AsReadOnly();
     public bool IsChecked { get; private set; }
     public DateTimeOffset CreatedOn { get; }
@@ -34,13 +34,17 @@ public class Translations : DomainModel<Guid>
         }
     }
 
-    public void SetValue(string? value)
+    public void SetValue(string language, string? value)
     {
-        if (!Equals(value, Value))
+        var translation = _translationValues.FirstOrDefault(tv => tv.LanguageId == language);
+        if (translation != null)
         {
-            IsChecked = false;
-            Value = value;
-            SetModified();
+            translation.SetValue(value);
+        }
+        else
+        {
+            translation = new TranslationValue(language, value);
+            _translationValues.Add(translation);
         }
     }
 
@@ -67,7 +71,6 @@ public class Translations : DomainModel<Guid>
         if (existing != null)
         {
             existing.SetKey(translation.Key);
-            existing.SetValue(translation.Value);
             SetModified();
         }
     }
@@ -90,41 +93,41 @@ public class Translations : DomainModel<Guid>
 
     public Translations(Guid id,
         Guid projectId,
-        string languageId,
         bool isDefault,
         string key, 
-        string fullNodeKey, 
-        string? value,
+        string fullNodeKey,
+        List<TranslationValue> values,
         List<ChildTranslation> childTranslations,
         bool isChecked, 
         DateTimeOffset createdOn, 
         DateTimeOffset? lastModifiedOn) : base(id)
     {
         _childTranslations = childTranslations;
+        _translationValues = values;
         ProjectId = projectId;
         Key = key;
         FullNodeKey = fullNodeKey;
-        Value = value;
         IsChecked = isChecked;
+        IsDefault = isDefault;
         CreatedOn = createdOn;
         LastModifiedOn = lastModifiedOn;
     }
 
-    private Translations(Guid projectId, string languageId, bool isDefault, string key) : base(Guid.NewGuid(), TrackingState.New)
+    private Translations(Guid projectId, bool isDefault, string key) : base(Guid.NewGuid(), TrackingState.New)
     {
         ProjectId = projectId;
-        LanguageId = languageId;
         IsDefault = isDefault;
         Key = key;
         FullNodeKey = key;
         IsChecked = false;
         CreatedOn = DateTimeOffset.UtcNow;
         _childTranslations = [];
+        _translationValues = [];
     }
 
     internal static Translations Create(Guid projectId, string languageId, bool isDefault, string key)
     {
-        return new Translations(projectId, languageId, isDefault, key);
+        return new Translations(projectId,  isDefault, key);
     }
 
 

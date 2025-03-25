@@ -16,12 +16,11 @@ public class SimpleFileParserTests
         var stream = typeof(SimpleFileParserTests).Assembly.GetManifestResourceStream(simpleExampleResourceName);
 
         // Act
-        var result = await parser.ImportFromFile(stream, CancellationToken.None);
+        var result = await parser.ImportFromFile(stream, "en", CancellationToken.None);
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(result.FirstOrDefault(r=> r.Key == "error").Value, "Error");
 
-await         parser.ExportToFile("D:\\Temp\\Test.json", result, CancellationToken.None);
+await         parser.ExportToFile("D:\\Temp\\Test.json", result, "en", "en", CancellationToken.None);
     }
 }

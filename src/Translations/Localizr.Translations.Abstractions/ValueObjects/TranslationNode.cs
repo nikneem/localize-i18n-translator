@@ -3,8 +3,8 @@
 public record TranslationNode(
     string Key, 
     string FullNodeKey, 
-    string? Value,
     List<TranslationNode>? Children,
-    bool IsChecked,
+    List<TranslationValue> Values,
+bool IsChecked,
     DateTimeOffset CreatedOn,
     DateTimeOffset? LastModifiedOn);

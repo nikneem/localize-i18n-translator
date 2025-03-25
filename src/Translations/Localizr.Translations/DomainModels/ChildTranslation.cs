@@ -7,10 +7,11 @@ public class ChildTranslation : DomainModel<Guid>
 {
 
     private readonly List<ChildTranslation> _childTranslations;
+    private readonly List<TranslationValue> _translationValues;
 
     public string Key { get; private set; }
     public string FullNodeKey { get; private set; }
-    public string? Value { get; private set; }
+    public IReadOnlyList<TranslationValue> Values => _translationValues.AsReadOnly();
     public IReadOnlyList<ChildTranslation> Children => _childTranslations.AsReadOnly();
     public bool IsChecked { get; private set; }
     public DateTimeOffset CreatedOn { get; }
@@ -31,13 +32,17 @@ public class ChildTranslation : DomainModel<Guid>
         }
     }
 
-    public void SetValue(string? value)
+    public void SetValue(string language, string? value)
     {
-        if (!Equals(value, Value))
+        var translation = _translationValues.FirstOrDefault(tv => tv.LanguageId == language);
+        if (translation != null)
         {
-            IsChecked = false;
-            Value = value;
-            SetModified();
+            translation.SetValue(value);
+        }
+        else
+        {
+            translation = new TranslationValue(language, value);
+            _translationValues.Add(translation);
         }
     }
 
@@ -64,7 +69,6 @@ public class ChildTranslation : DomainModel<Guid>
         if (existing != null)
         {
             existing.SetKey(translation.Key);
-            existing.SetValue(translation.Value);
             SetModified();
         }
     }
@@ -88,16 +92,16 @@ public class ChildTranslation : DomainModel<Guid>
     public ChildTranslation(Guid id,
         string key,
         string fullNodeKey,
-        string? value,
         List<ChildTranslation> childTranslations,
+        List<TranslationValue> values,
         bool isChecked,
         DateTimeOffset createdOn,
         DateTimeOffset? lastModifiedOn) : base(id)
     {
         _childTranslations = childTranslations;
+        _translationValues = values;
         Key = key;
         FullNodeKey = fullNodeKey;
-        Value = value;
         IsChecked = isChecked;
         CreatedOn = createdOn;
         LastModifiedOn = lastModifiedOn;
@@ -110,6 +114,7 @@ public class ChildTranslation : DomainModel<Guid>
         IsChecked = false;
         CreatedOn = DateTimeOffset.UtcNow;
         _childTranslations = [];
+        _translationValues = [];
     }
 
     internal static ChildTranslation Create(string key)
